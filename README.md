@@ -61,3 +61,131 @@ La ejecución automática guarda el historial detallado de salidas en:
 - `logs/launchd_stderr.log` (salida de errores de launchd)
 
 Las notificaciones del sistema se enviarán nativamente a macOS usando AppleScript (`osascript`) para informarte sobre el éxito de las postulaciones o si la sesión ha expirado y requiere actualizar las cookies.
+
+---
+
+## Modelo de Ramas (GitFlow Tree)
+
+Este proyecto sigue el modelo de ramificación **GitFlow** para mantener el código de producción estable y organizar el desarrollo de nuevas características o parches de forma limpia.
+
+### Representación Visual
+
+```mermaid
+gitGraph
+    commit id: "Initial Commit"
+    branch develop
+    checkout develop
+    commit id: "Setup automation structures"
+    branch feature/mejorar-filtros
+    checkout feature/mejorar-filtros
+    commit id: "Add keywords exclusion list"
+    checkout develop
+    merge feature/mejorar-filtros
+    checkout main
+    merge develop tag: "v1.0.0"
+    checkout develop
+    branch hotfix/fix-cookie-loading
+    checkout hotfix/fix-cookie-loading
+    commit id: "Patch path resolution"
+    checkout develop
+    merge hotfix/fix-cookie-loading
+    checkout main
+    merge hotfix/fix-cookie-loading tag: "v1.0.1"
+```
+
+### Estructura de Ramas
+
+- **`main`**: Rama de producción. Contiene código 100% estable y probado. Toda modificación en esta rama se etiqueta con una versión (Tag).
+- **`develop`**: Rama de integración. Aquí se consolidan las nuevas características preparándose para la siguiente versión estable.
+- **`feature/*`**: Ramas temporales para desarrollar nuevas características (ej. `feature/mejorar-busqueda`). Nacen de `develop` y se fusionan de vuelta en `develop`.
+- **`hotfix/*`**: Ramas de emergencia para solucionar errores críticos en producción (ej. `hotfix/actualizar-selectores`). Nacen de `main` y se fusionan tanto en `main` como en `develop`.
+
+---
+
+## Flujo de Trabajo y Uso
+
+### 1. Preparación del Entorno Local
+
+Asegúrate de tener instalado Python 3.10+ y los paquetes de automatización:
+
+```bash
+# Clonar el repositorio
+git clone https://github.com/statick88/job_applications.git
+cd job_applications
+
+# Crear e instalar dependencias en entorno virtual (Recomendado)
+python3 -m venv .venv
+source .venv/bin/activate
+pip install playwright beautifulsoup4 pyyaml
+
+# Instalar los navegadores de Playwright
+playwright install chromium
+```
+
+### 2. Configurar las Credenciales del Portal
+
+Crea el archivo de configuración con tu sesión activa de Encuentra Empleo:
+
+```bash
+# Crear directorio de configuración
+mkdir -p config
+
+# Guardar tus cookies activas (Este archivo está protegido en .gitignore)
+cat <<EOF > config/cookies.json
+{
+  "JSESSIONID": "TU_JSESSIONID_AQUI",
+  "NSC_JOmnkwatc53jecrcfmkoaierrq1sab2": "TU_NSC_COOKIE_AQUI"
+}
+EOF
+```
+
+### 3. Crear una Nueva Característica (Feature Branch)
+
+Si vas a realizar cambios o mejoras al script (ej. optimizar la detección del botón "Aplicar"):
+
+```bash
+# Asegúrate de estar en develop y al día
+git checkout develop
+git pull origin develop
+
+# Crear rama de feature
+git checkout -b feature/optimizar-boton-aplicar
+
+# Realiza tus cambios en el código...
+# Realiza commits siguiendo convenciones semánticas (Conventional Commits)
+git add playwright_apply.py
+git commit -m "feat: optimize apply button locator and add robust retry mechanism"
+
+# Subir rama para revisión
+git push -u origin feature/optimizar-boton-aplicar
+```
+
+Una vez probado, realiza un Pull Request hacia la rama `develop` en GitHub.
+
+### 4. Lanzar un Hotfix (Bugfix Urgente)
+
+Si la plataforma de Encuentra Empleo cambia sus selectores en producción y rompe el script:
+
+```bash
+# Crear rama de hotfix desde main
+git checkout main
+git checkout -b hotfix/fix-selectors-change
+
+# Aplicar el fix rápido...
+git add playwright_apply.py
+git commit -m "fix: update selectors to match new portal HTML structure"
+
+# Fusionar en main y etiquetar versión
+git checkout main
+git merge hotfix/fix-selectors-change
+git tag -a v1.0.1 -m "Versión 1.0.1: Corrección de selectores por cambio de portal"
+git push origin main --tags
+
+# IMPORTANTE: Fusionar también de vuelta a develop para no perder el fix
+git checkout develop
+git merge hotfix/fix-selectors-change
+git push origin develop
+
+# Eliminar rama local
+git branch -d hotfix/fix-selectors-change
+```
