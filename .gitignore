@@ -1,0 +1,57 @@
+# ==============================================================================
+# Git Ignore Rules - Job Applications Scanner
+# ==============================================================================
+
+# macOS files
+.DS_Store
+.AppleDouble
+.LSOverride
+
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+.ipynb_checkpoints
+.pytest_cache/
+.venv/
+venv/
+env/
+
+# Sensible configuration / Secrets (CRITICAL SECURITY)
+config/cookies.json
+config/profile.yml
+.env
+.env.*
+
+# Local executions & logs
+logs/
+*.log
+
+# Screenshots and Debug Images
+*.png
+debug_error.png
+debug_initial.png
+debug_search_*.png
+job*.png
+applications/**/*.png
+applications/**/postulation_success.png
+
+# User private PDFs
+*.pdf
+cv-actualizado.pdf
+cv-soporte-tecnico.pdf
+CV-ITEC-2026.pdf
+INFORME_9SECTIONS.pdf
+
+# App-specific caches
+.playwright-mcp/
+
+# Scratch, test outputs and debug files
+inspect_*.py
+scratch_*.py
+find_loader.py
+find_toggle_element.py
+parse_*.py
+update_*.html
+*.html
+*.xml

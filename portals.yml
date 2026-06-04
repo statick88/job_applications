@@ -1,0 +1,18 @@
+# Portales de Empleo - Config
+
+portals:
+  - name: "Sistematízate Perú"
+    type: "direct"
+    url: "https://wa.link/6bejs8"
+    contact:
+      - WhatsApp: "https://wa.link/6bejs8"
+      - Email: "comercial@sistematizateperu.com"
+      - Email alt: "soporte@sistematizateperu.com"
+    status: "applied"
+    applied_date: "2026-05-04"
+    notes: "Postulación enviada - esperando respuesta"
+
+settings:
+  follow_up_days: 3
+  auto_reminder: true
+  search_active: true
