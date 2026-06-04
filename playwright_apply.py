@@ -114,15 +114,61 @@ async def apply_to_jobs():
                 pass
             await page.wait_for_timeout(500)
         
+        # Helper to open search dialog with retry and page reload if it fails
+        async def open_search_dialog(retries=2):
+            nonlocal expired_session
+            for attempt in range(1, retries + 1):
+                print(f"Opening search dialog (Attempt {attempt}/{retries})...")
+                try:
+                    await clear_all_dialogs()
+                    
+                    # Wait for the trigger button
+                    await page.wait_for_selector("a[id='formBuscaOferta:buscar']", state="visible", timeout=10000)
+                    
+                    # Click search toggle button
+                    await page.click("a[id='formBuscaOferta:buscar']", force=True)
+                    
+                    # Wait for dialog search button
+                    await page.wait_for_selector("a[id='FormSearch:j_idt128']", state="visible", timeout=10000)
+                    print("Search dialog opened successfully.")
+                    return True
+                except Exception as e:
+                    print(f"  Warning: Failed to open search dialog on attempt {attempt}: {e}")
+                    debug_img = os.path.join(SCRIPT_DIR, f"debug_dialog_fail_attempt_{attempt}.png")
+                    try:
+                        await page.screenshot(path=debug_img)
+                        print(f"  Saved attempt failure screenshot to {debug_img}")
+                    except Exception:
+                        pass
+                    
+                    if attempt < retries:
+                        print("  Reloading page to refresh ViewState...")
+                        await page.goto(URL, timeout=40000)
+                        await wait_for_loading()
+                        
+                        # Detect expired session (redirected to index.jsf / landing page)
+                        if "busquedaOferta.jsf" not in page.url:
+                            print(f"  Redirect detected during reload: {page.url}. Session is expired.")
+                            expired_session = True
+                            send_notification("Encuentra Empleo - Sesión Expirada", "La sesión caducó durante la navegación. Por favor actualiza config/cookies.json")
+                            raise Exception("SESSION_EXPIRED")
+            
+            raise Exception("Failed to open search dialog after all retries")
+
         # Helper to restore search state after a redirect
         async def restore_search_state(sal_code, target_page):
             print(f"Restoring search state (Salary: {sal_code}, Page: {target_page})...")
             await page.goto(URL, timeout=40000)
-            await page.wait_for_selector("a[id='formBuscaOferta:buscar']", state="visible", timeout=20000)
             
-            await clear_all_dialogs()
-            await page.click("a[id='formBuscaOferta:buscar']", force=True)
-            await page.wait_for_selector("a[id='FormSearch:j_idt128']", state="visible", timeout=15000)
+            # Check if session is expired on reload
+            if "busquedaOferta.jsf" not in page.url:
+                print(f"Redirected to landing page {page.url} during restore. Session is expired.")
+                nonlocal expired_session
+                expired_session = True
+                send_notification("Encuentra Empleo - Sesión Expirada", "La sesión caducó al restaurar el estado. Por favor actualiza config/cookies.json")
+                return
+                
+            await open_search_dialog(retries=2)
             
             await page.eval_on_selector(
                 "select[name='FormSearch:remuneracion_input']", 
@@ -171,15 +217,8 @@ async def apply_to_jobs():
             for sal_code in SALARY_CODES:
                 print(f"\n--- Scanning Salary Code: {sal_code} ---")
                 
-                # Make sure all dialogs are hidden before opening search
-                await clear_all_dialogs()
-                
-                # Click search toggle button to show the search dialog
-                print("Opening search dialog...")
-                await page.click("a[id='formBuscaOferta:buscar']", force=True)
-                
-                # Wait for the search dialog button to be visible
-                await page.wait_for_selector("a[id='FormSearch:j_idt128']", state="visible", timeout=15000)
+                # Open search dialog using our robust helper
+                await open_search_dialog(retries=2)
                 
                 # Select salary code via JS evaluation
                 print(f"Selecting salary code {sal_code}...")
@@ -389,10 +428,16 @@ async def apply_to_jobs():
                 send_notification("Postulación Completada", "Escaneo finalizado. No se encontraron nuevas ofertas aplicables.")
                 
         except Exception as e:
+            if "SESSION_EXPIRED" in str(e):
+                print("\nGraceful shutdown: Session is expired. Stopping crawler execution.")
+                return
             print(f"\nERROR OCCURRED: {e}")
             error_img = os.path.join(SCRIPT_DIR, "debug_error.png")
-            await page.screenshot(path=error_img)
-            print(f"Saved error screenshot to {error_img}")
+            try:
+                await page.screenshot(path=error_img)
+                print(f"Saved error screenshot to {error_img}")
+            except Exception:
+                pass
             send_notification("Error de Ejecución", f"Error en postulación automática: {str(e)[:40]}")
             raise e
         finally:
