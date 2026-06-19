@@ -1,0 +1,5 @@
+#!/bin/bash
+mkdir -p /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/.backup
+cp /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/CV_Diego_Saavedra_Ingeniero_Software_SemiSenior.md /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/.backup/CV_Diego_Saavedra_Ingeniero_Software_SemiSenior.md.orig
+cp /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/Cover_Letter_Ingeniero_Software_SemiSenior.md /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/.backup/Cover_Letter_Ingeniero_Software_SemiSenior.md.orig
+cp /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/Correo_Envio_Ingeniero_Software_SemiSenior.md /Users/statick/Documents/job_applications/applications/033-uteam-ingeniero-software-semisenior/.backup/Correo_Envio_Ingeniero_Software_SemiSenior.md.orig

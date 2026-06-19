@@ -1,0 +1,224 @@
+@page {
+  size: A4;
+  margin: 1.8cm 1.5cm 2.0cm;
+  @top-center {
+    content: "Diego Medardo Saavedra García  |  CV 2026";
+    font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #64748b;
+    border-bottom: 1pt solid #e2e8f0;
+    padding-bottom: 4pt;
+    margin-bottom: 6pt;
+  }
+  @bottom-center {
+    content: "Página " counter(page) " de " counter(pages);
+    font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+    font-size: 8pt;
+    color: #64748b;
+    border-top: 1pt solid #e2e8f0;
+    padding-top: 4pt;
+    margin-top: 6pt;
+  }
+}
+
+body {
+  font-family: 'Inter', 'Helvetica Neue', 'Arial', sans-serif;
+  font-size: 9.5pt;
+  line-height: 1.4;
+  color: #1a1a2e;
+  background: #ffffff;
+}
+
+/* ─── HERO / HEADER ─── */
+h1 {
+  font-size: 18pt;
+  font-weight: 800;
+  color: #0f172a;
+  margin: 0 0 4pt 0;
+  letter-spacing: -0.3pt;
+  border-bottom: none;
+  padding-bottom: 0;
+}
+
+.subtitle {
+  font-size: 10pt;
+  font-weight: 600;
+  color: #3b82f6;
+  margin: 0 0 6pt 0;
+  letter-spacing: 0.3pt;
+}
+
+.contact-line {
+  font-size: 8.5pt;
+  color: #475569;
+  margin: 0 0 10pt 0;
+  line-height: 1.3;
+}
+
+/* ─── PROFILE HEADER CON FOTO ─── */
+.profile-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 14pt;
+  margin-bottom: 14pt;
+  padding-bottom: 10pt;
+  border-bottom: 1.5pt solid #e2e8f0;
+  page-break-inside: avoid;
+  page-break-after: avoid;
+}
+
+.profile-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.profile-roles {
+  font-size: 10.2pt;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 0 0 5pt 0;
+  line-height: 1.3;
+}
+
+.profile-contact {
+  font-size: 8.6pt;
+  color: #475569;
+  line-height: 1.45;
+}
+
+.profile-photo {
+  width: 85pt;
+  height: 85pt;
+  border-radius: 50%;
+  object-fit: cover;
+  border: 2.5pt solid #3b82f6;
+  flex-shrink: 0;
+}
+
+/* ─── SECCIONES ─── */
+h2 {
+  font-size: 10.5pt;
+  font-weight: 700;
+  color: #0f172a;
+  margin: 16pt 0 6pt 0;
+  padding: 5pt 10pt;
+  background: #f1f5f9;
+  border-left: 3.5pt solid #3b82f6;
+  text-transform: uppercase;
+  letter-spacing: 0.5pt;
+  border-bottom: none;
+  page-break-after: avoid;
+}
+
+/* ─── SUBSECCIONES ─── */
+h3 {
+  font-size: 9.8pt;
+  font-weight: 700;
+  color: #1e293b;
+  margin: 10pt 0 3pt 0;
+  page-break-after: avoid;
+}
+
+/* ─── BADGES & ETIQUETAS ─── */
+.stack-tag {
+  display: inline-block;
+  background: #eff6ff;
+  color: #1d4ed8;
+  border: 1pt solid #bfdbfe;
+  border-radius: 3pt;
+  padding: 1pt 4pt;
+  font-size: 8pt;
+  font-weight: 500;
+  margin: 1pt 2pt 1pt 0;
+}
+
+/* ─── LISTAS Y PÁRRAFOS ─── */
+p {
+  margin: 3pt 0;
+  text-align: justify;
+  color: #334155;
+}
+
+ul {
+  margin: 3pt 0 5pt 14pt;
+  padding: 0;
+  list-style: disc;
+}
+
+li {
+  margin: 2pt 0;
+  font-size: 9.2pt;
+  color: #334155;
+}
+
+/* ─── TABLAS ─── */
+table {
+  width: 100%;
+  border-collapse: collapse;
+  margin: 6pt 0 10pt 0;
+  font-size: 8.8pt;
+  page-break-inside: auto;
+}
+
+thead {
+  background: #f8fafc;
+}
+
+th {
+  font-weight: 700;
+  color: #0f172a;
+  text-align: left;
+  padding: 5pt 8pt;
+  border-bottom: 2pt solid #3b82f6;
+}
+
+td {
+  padding: 4pt 8pt;
+  border-bottom: 0.5pt solid #e2e8f0;
+  color: #334155;
+  vertical-align: top;
+}
+
+tr {
+  page-break-inside: avoid;
+}
+
+tr:last-child td {
+  border-bottom: none;
+}
+
+/* ─── ENLACES ─── */
+a {
+  color: #2563eb;
+  text-decoration: none;
+}
+
+/* ─── BLOQUES DESTACADOS ─── */
+.highlight-box {
+  background: #f8fafc;
+  border-left: 3pt solid #3b82f6;
+  padding: 6pt 10pt;
+  margin: 6pt 0;
+  font-size: 9pt;
+  color: #334155;
+}
+
+.logro {
+  color: #0369a1;
+  font-weight: 600;
+}
+
+/* ─── FOOTER / CONTACTO ─── */
+.contact-section {
+  margin-top: 10pt;
+  padding-top: 6pt;
+  border-top: 1pt solid #e2e8f0;
+}
+
+/* ─── HORIZONTAL RULE ─── */
+hr {
+  border: none;
+  border-top: 0.75pt solid #e2e8f0;
+  margin: 10pt 0;
+}
